@@ -84,7 +84,7 @@ const Game = () => {
   return (
     <div className="game">
       <div className="game-board">
-        <h1>Tic Tac Toe</h1>
+        <h1>Tic Tac Toe Game</h1>
         <Board />
       </div>
     </div>
