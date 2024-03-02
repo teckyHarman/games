@@ -1,0 +1,30 @@
+.ludo-game {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .game-board {
+    /* Add styles for the Ludo board */
+  }
+  
+  .dice {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .dice button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    outline: none;
+  }
+  
+  .dice button:hover {
+    background-color: #0056b3;
+  }
+  

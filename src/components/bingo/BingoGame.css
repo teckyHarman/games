@@ -1,0 +1,43 @@
+.bingo-game {
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  
+  .player-card {
+    margin-top: 20px;
+  }
+  
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 50px);
+    grid-gap: 5px;
+    margin-top: 10px;
+  }
+  
+  .card-cell {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .draw-number {
+    margin-top: 20px;
+  }
+  
+  .draw-number button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    outline: none;
+  }
+  
+  .draw-number button:hover {
+    background-color: #0056b3;
+  }
+  

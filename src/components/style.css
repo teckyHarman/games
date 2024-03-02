@@ -1,0 +1,10 @@
+.screen{
+    display: flex;
+}
+.container{
+    background-color: gray;
+    width: 50%;
+    margin: 20px;
+    padding: 30px;
+    border-radius: 20px;
+}
