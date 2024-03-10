@@ -1,8 +1,9 @@
-import Game from './tictactoe/TicTacToe';
+import TicTacToe from './tictactoe/TicTacToe';
 import './style.css';
 import MemoryGame from './memorygame/MemoryGame';
 import LudoGame from './ludo/Ludo';
 import BingoGame from './bingo/BingoGame';
+import Chess from './chess/Chess';
 
 function Home() {
   return (
@@ -10,17 +11,20 @@ function Home() {
         <h1>Home Screen</h1>
         <div className="screen">
             <div className='container' >
-              <Game />
+              <TicTacToe />
             </div>
-            <div className='container' >
+            {/* <div className='container' >
               <MemoryGame />
-            </div>
+            </div> */}
             <div className='container' >
               <LudoGame />
             </div>
-            {/* <div className='container' >
+            <div className='container' >
               <BingoGame />
-            </div> */}
+            </div>
+            <div className='container' >
+              <Chess />
+            </div>
         </div>
     </>
   );

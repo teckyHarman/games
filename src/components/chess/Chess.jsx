@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import './BingoGame.css';
+import './Chess.css';
 
-function BingoGame() {
+function Chess() {
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
     let numbers = [];
     let randomNumbers = [];
-    for (let i = 1; i <= 25; i++) {
+    for (let i = 1; i <= 64; i++) {
       numbers.push(i);
     }
 
-    for (let i = 1; i <= 25; i++) {
+    for (let i = 1; i <= 64; i++) {
       const randomIndex = Math.floor(Math.random() * numbers.length);
       const randomNumber = numbers[randomIndex];
       randomNumbers.push(randomNumber);
@@ -23,9 +23,9 @@ function BingoGame() {
 
   const generateTableData = (randomNumbers) => {
     const tData = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 8; i++) {
       const rowData = [];
-      for (let j = 0; j < 5; j++) {
+      for (let j = 0; j < 8; j++) {
         rowData.push(randomNumbers[0]);
         randomNumbers = randomNumbers.slice(1);
       }
@@ -40,26 +40,19 @@ function BingoGame() {
 
   return (
     <div>
+      <h3>Chess</h3>
       <table>
-        <thead>
-          <tr>
-            <th>B</th>
-            <th>I</th>
-            <th>N</th>
-            <th>G</th>
-            <th>O</th>
-          </tr>
-        </thead>
+        
         <tbody>
           {tableData.map((rowData, rowIndex) => (
             <tr key={rowIndex}>
               {rowData.map((cellData, cellIndex) => (
                 <td key={cellIndex}>
-                  <button className='tile' onClick={() => onTileClicked(cellData)}>
-                    {cellData}
-                    <div className='mask'>
+                  <button className={(rowIndex+cellIndex) % 2 == 0?'tile':'tile-black'} onClick={() => onTileClicked(cellData)}>
+                    
+                    {/* <div className='mask'>
                       /
-                    </div>
+                    </div> */}
                   </button>
                 </td>
               ))}
@@ -71,4 +64,4 @@ function BingoGame() {
   );
 };
 
-export default BingoGame;
+export default Chess;
