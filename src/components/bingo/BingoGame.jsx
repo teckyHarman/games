@@ -3,6 +3,7 @@ import './BingoGame.css';
 
 function BingoGame() {
   const [tableData, setTableData] = useState([]);
+  const [table, setTable] = useState([]);
 
   useEffect(() => {
     let numbers = [];
@@ -23,6 +24,7 @@ function BingoGame() {
 
   const generateTableData = (randomNumbers) => {
     const tData = [];
+    const arr = [];
     for (let i = 0; i < 5; i++) {
       const rowData = [];
       for (let j = 0; j < 5; j++) {
@@ -30,12 +32,19 @@ function BingoGame() {
         randomNumbers = randomNumbers.slice(1);
       }
       tData.push(rowData);
+      arr.push([0,0,0,0,0]);
     }
     setTableData(tData);
+    setTable(arr);
   }
 
-  const onTileClicked =  (index) => {
-    console.log('clicked '+index)
+  const onTileClicked =  (row, col) => {
+    console.log('clicked '+row+' col -> '+col)
+    const t = table;
+    const rowArr = t[row];
+    rowArr[col] = 1;
+    console.log('table -> '+t)
+    setTable(t);
   }
 
   return (
@@ -55,11 +64,16 @@ function BingoGame() {
             <tr key={rowIndex}>
               {rowData.map((cellData, cellIndex) => (
                 <td key={cellIndex}>
-                  <button className='tile' onClick={() => onTileClicked(cellData)}>
+                  <button className='tile' onClick={() => onTileClicked(rowIndex, cellIndex)}>
                     {cellData}
-                    <div className='mask'>
-                      /
-                    </div>
+                    {
+                      table[rowIndex][cellData] === 1 && (
+                        <div className='mask'>
+                        /
+                      </div>
+                      )
+                    }
+                    
                   </button>
                 </td>
               ))}

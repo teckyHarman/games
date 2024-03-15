@@ -48,7 +48,7 @@
     font-size: 20px;
   }
   .tile-black {
-    background-color: gray;
+    background-color: rgb(58, 123, 99);
   }
   .mask{
     height: 50px;
@@ -57,4 +57,8 @@
     top: 0px;
     left: 0px;
     font-size: 40px;
+  }
+  .pices
+  {
+    font-size: 12px;
   }
