@@ -141,6 +141,26 @@ function Chess() {
     return board;
   }
 
+  const isBlackPiece = (board, row, col) => {
+    for(let i = 0;i<6;i++)
+    {
+      if(board[row][col] === blackPieces[i])
+        return true;
+    }
+
+    return false;
+  }
+
+  const isWhitePiece = (board, row, col) => {
+    for(let i = 0;i<6;i++)
+    {
+      if(board[row][col] === whitePieces[i])
+        return true;
+    }
+
+    return false;
+  }
+
   const showPossibleMoves = (row, col, piece) => {
     let board = possibleMoves;
 
@@ -151,9 +171,9 @@ function Chess() {
           board[row-1][col] = spot
         if(row === 6)
           board[row-2][col] = spot
-        if(table[row-1][col-1]===blackPieces[5])
+        if(isBlackPiece(table, row-1, col-1))
           board[row-1][col-1] = spot;
-        if(table[row-1][col+1]===blackPieces[5])
+        if(isBlackPiece(table, row-1, col+1))
           board[row-1][col+1] = spot;
         setPossibleMoves([...board]);
         break;
@@ -225,6 +245,10 @@ function Chess() {
       board[row+1][col] = spot
       if(row === 1)
       board[row+2][col] = spot
+      if(isWhitePiece(table, row+1, col-1))
+        board[row+1][col-1] = spot;
+      if(isWhitePiece(table, row+1, col+1))
+        board[row+1][col+1] = spot;
       setPossibleMoves([...board]);
       break;
       default:
