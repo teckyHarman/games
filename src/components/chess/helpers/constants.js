@@ -11,3 +11,5 @@ export const blackBishop = 'bBishop';
 export const blackKing = 'bKing';
 export const blackQueen = 'bQueen';
 export const blackPawn = 'bPawn';
+
+export const spot = '@';
