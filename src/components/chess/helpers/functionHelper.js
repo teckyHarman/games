@@ -387,16 +387,16 @@ const isKightAttacking = (table, row, col, piece) => {
 const isPawnAttacking = (table, row, col, piece) => {
 
   if (piece == blackKing) {
-    if (isOpponentPawn(piece, table[row + 1][col - 1]))
+    if (row < 7 && col > 0 && isOpponentPawn(piece, table[row + 1][col - 1]))
       return true;
-    if (isOpponentPawn(piece, table[row + 1][col + 1]))
+    if (row < 7 && col < 7 && isOpponentPawn(piece, table[row + 1][col + 1]))
       return true;
   }
 
   if (piece == whiteKing) {
-    if (isOpponentPawn(piece, table[row - 1][col - 1]))
+    if (row > 0 && col > 0 && isOpponentPawn(piece, table[row - 1][col - 1]))
       return true;
-    if (isOpponentPawn(piece, table[row - 1][col + 1]))
+    if (row > 0 && col < 7 && isOpponentPawn(piece, table[row - 1][col + 1]))
       return true;
   }
 
@@ -404,7 +404,7 @@ const isPawnAttacking = (table, row, col, piece) => {
 }
 
 const isKingAttacking = (table, row, col, piece) => {
-  
+
   let row_start = Math.max(row - 1, 0), col_start = Math.max(col - 1, 0);
   let row_end = Math.min(row + 1, 7), col_end = Math.min(col + 1, 7);
   for (let r = row_start; r <= row_end; r++) {
