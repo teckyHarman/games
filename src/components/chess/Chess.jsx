@@ -8,24 +8,39 @@ import {
   spot
 } from './helpers/constants.js'
 import {
-  pawnTestBoard, emptyBoard, kingBoard
+  startBoard, pawnTestBoard, emptyBoard, kingBoard, enpassantBoard, castlingBoard
 } from './helpers/testboard.js'
-import {showPossibleMoves, hidePossibleMoves, isWhitePiece, isBlackPiece} from './helpers/functionHelper.js';
+import { showPossibleMoves, hidePossibleMoves, getMove, isWhitePiece, isBlackPiece } from './helpers/functionHelper.js';
 
 function Chess() {
   const turn = true;
-  const [selectedPiece, setSelectedPiece] = useState([]);
+  const [selectedPiecePosition, setSelectedPiecePosition] = useState([]);
   const [isWhitePromotionVisible, setIsWhitePromotionVisible] = useState(false);
   const [isBlackPromotionVisible, setIsBlackPromotionVisible] = useState(false);
-  const [table, setTable] = useState(kingBoard);
+  const [table, setTable] = useState(startBoard);
   const [possibleMoves, setPossibleMoves] = useState(emptyBoard);
-  
+  const [moves, setMoves] = useState([]);
+  const [enPassantRows, setEnPassantRows] = useState([]);
+
   const onTileClicked = (row, col, piece) => {
     if (possibleMoves[row][col] === spot) {
       let board = table;
       hidePossibleMoves(possibleMoves, setPossibleMoves);
-      const selected_piece = board[selectedPiece[0]][selectedPiece[1]];
-      board[selectedPiece[0]][selectedPiece[1]] = '';
+      const selected_piece = board[selectedPiecePosition[0]][selectedPiecePosition[1]];
+      // making curr position empty
+      board[selectedPiecePosition[0]][selectedPiecePosition[1]] = '';
+
+      // En passant
+      if ((row === 4 && selected_piece === whitePawn) || (row === 3 && selected_piece === blackPawn))
+        setEnPassantRows(col)
+      else
+        setEnPassantRows('')
+
+      if ((selected_piece === whitePawn || selected_piece === blackPawn) && col !== selectedPiecePosition[1] && piece === '') {
+        board[selectedPiecePosition[0]][col] = ''
+      }
+
+      // Pawn promotion
       if (row === 0 && selected_piece === whitePawn) {
         setIsWhitePromotionVisible(true)
         return;
@@ -34,25 +49,43 @@ function Chess() {
         setIsBlackPromotionVisible(true)
         return;
       }
+
+      // Castling
+      if (selected_piece === whiteKing || selected_piece === blackKing) {
+        if (Math.abs(col - selectedPiecePosition[1]) === 2) {
+          if (col > selectedPiecePosition[1]) {
+            const rook = board[row][7]
+            board[row][col - 1] = rook
+            board[row][7] = ''
+          } else {
+            const rook = board[row][0]
+            board[row][col + 1] = rook
+            board[row][0] = ''
+          }
+        }
+      }
+
+      const move = getMove(table, selected_piece, selectedPiecePosition, [row, col])
+      setMoves([...moves, move])
       board[row][col] = selected_piece;
       setTable([...board]);
     }
     else {
       hidePossibleMoves(possibleMoves, setPossibleMoves);
-      if(piece === '')
+      if (piece === '')
         return;
-      const board = showPossibleMoves(table, row, col, piece);
+      const board = showPossibleMoves(table, row, col, piece, enPassantRows);
       setPossibleMoves([...board]);
-      setSelectedPiece([row, col]);
+      setSelectedPiecePosition([row, col]);
     }
   }
 
   const onPromotionSelected = (piece) => {
     let board = table;
     if (isWhitePiece(piece))
-      board[0][selectedPiece[1]] = piece;
+      board[0][selectedPiecePosition[1]] = piece;
     if (isBlackPiece(piece))
-      board[7][selectedPiece[1]] = piece;
+      board[7][selectedPiecePosition[1]] = piece;
     setTable([...board]);
     setIsWhitePromotionVisible(false)
     setIsBlackPromotionVisible(false)

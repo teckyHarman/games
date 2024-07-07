@@ -23,6 +23,59 @@ import { emptyBoard } from './testboard.js'
 const whitePieces = [whiteRook, whiteKnight, whiteBishop, whiteKing, whiteQueen, whitePawn]
 const blackPieces = [blackRook, blackKnight, blackBishop, blackKing, blackQueen, blackPawn]
 
+export const getMove = (table, selected_piece, currPos, newPos) => {
+  const curr_row = currPos[0]
+  const curr_col = currPos[1]
+  const new_row = newPos[0]
+  const new_col = newPos[1]
+  let move = ''
+
+  if (selected_piece === whitePawn || selected_piece === blackPawn) {
+    // Pawn
+    if (table[new_row][new_col] === '')
+      move = String.fromCharCode(new_row + 97) + (8 - new_col)
+    else
+      move = String.fromCharCode(curr_row + 97) + (8 - curr_col) + 'x' + String.fromCharCode(new_row + 97) + (8 - new_col)
+  }
+  else if (selected_piece === whiteRook || selected_piece === blackRook) {
+    // Rook
+    if (table[new_row][new_col] === '')
+      move = 'R' + String.fromCharCode(curr_row + 97) + (8 - curr_col) + String.fromCharCode(new_row + 97) + (8 - new_col)
+    else
+      move = 'R' + String.fromCharCode(curr_row + 97) + (8 - curr_col) + 'x' + String.fromCharCode(new_row + 97) + (8 - new_col)
+  }
+  else if (selected_piece === whiteBishop || selected_piece === blackBishop) {
+    // Bishop
+    if (table[new_row][new_col] === '')
+      move = 'B' + String.fromCharCode(curr_row + 97) + (8 - curr_col) + String.fromCharCode(new_row + 97) + (8 - new_col)
+    else
+      move = 'B' + String.fromCharCode(curr_row + 97) + (8 - curr_col) + 'x' + String.fromCharCode(new_row + 97) + (8 - new_col)
+  }
+  else if (selected_piece === whiteKnight || selected_piece === blackKnight) {
+    // Knight
+    if (table[new_row][new_col] === '')
+      move = 'N' + String.fromCharCode(curr_row + 97) + (8 - curr_col) + String.fromCharCode(new_row + 97) + (8 - new_col)
+    else
+      move = 'N' + String.fromCharCode(curr_row + 97) + (8 - curr_col) + 'x' + String.fromCharCode(new_row + 97) + (8 - new_col)
+  }
+  else if (selected_piece === whiteQueen || selected_piece === blackQueen) {
+    // Queen
+    if (table[new_row][new_col] === '')
+      move = 'Q' + String.fromCharCode(curr_row + 97) + (8 - curr_col) + String.fromCharCode(new_row + 97) + (8 - new_col)
+    else
+      move = 'Q' + String.fromCharCode(curr_row + 97) + (8 - curr_col) + 'x' + String.fromCharCode(new_row + 97) + (8 - new_col)
+  }
+  else if (selected_piece === whiteKing || selected_piece === blackQueen) {
+    // King
+    if (table[new_row][new_col] === '')
+      move = 'K' + String.fromCharCode(new_row + 97) + (8 - new_col)
+    else
+      move = 'Kx' + String.fromCharCode(new_row + 97) + (8 - new_col)
+  }
+
+  return move;
+}
+
 export const getChessPiece = (piece) => {
   if (piece === whiteRook)
     return whiteRookImg;
@@ -52,7 +105,7 @@ export const getChessPiece = (piece) => {
   return null;
 }
 
-export const showPossibleMoves = (table, row, col, piece) => {
+export const showPossibleMoves = (table, row, col, piece, enPassantCol) => {
   let board = emptyBoard;
   switch (piece) {
 
@@ -71,8 +124,9 @@ export const showPossibleMoves = (table, row, col, piece) => {
       // right attack
       if (isBlackPiece(table[row - 1][col + 1]))
         board[row - 1][col + 1] = spot;
-      // Promotion - Not available
       // En passant
+      if (row === 3 && (col === enPassantCol - 1 || col === enPassantCol + 1))
+        board[row - 1][enPassantCol] = spot;
 
       return board;
 
@@ -87,6 +141,10 @@ export const showPossibleMoves = (table, row, col, piece) => {
         board[row + 1][col - 1] = spot;
       if (isWhitePiece(table[row + 1][col + 1]))
         board[row + 1][col + 1] = spot;
+      // En passant
+      if (row === 4 && (col === enPassantCol - 1 || col === enPassantCol + 1))
+        board[row + 1][enPassantCol] = spot;
+
       return board;
 
     // rook
@@ -151,7 +209,6 @@ const isValidTile = (selectedPiece, possibleSpot) => {
   return false;
 }
 
-
 const kingMoves = (table, row, col, piece) => {
   let board = emptyBoard;
 
@@ -165,6 +222,21 @@ const kingMoves = (table, row, col, piece) => {
         board[r][c] = spot;
     }
   }
+
+  // Castling 
+  // right side
+  if (table[row][col + 1] === '' && table[row][col + 2] === '' && isAllyRook(piece, table[row][col + 3])
+    && isSafePosition(table, row, col, piece) && isSafePosition(table, row, col + 1, piece) && isSafePosition(table, row, col + 2, piece) && isSafePosition(table, row, col + 3, piece)) {
+    board[row][col + 2] = spot
+  }
+
+  // left side
+  if (table[row][col - 1] === '' && table[row][col - 2] === '' && (table[row][col - 3] === '' && isAllyRook(piece, table[row][col - 4]))
+    && isSafePosition(table, row, col, piece) && isSafePosition(table, row, col - 1, piece) && isSafePosition(table, row, col - 2, piece)
+    && isSafePosition(table, row, col - 3, piece) && isSafePosition(table, row, col - 4, piece)) {
+    board[row][col - 2] = spot
+  }
+
   return board;
 }
 
@@ -173,7 +245,19 @@ const isSafePosition = (table, row, col, piece) => {
     || isPawnAttacking(table, row, col, piece) || isKingAttacking(table, row, col, piece))
     return false;
 
-  console.log('SafePosition r -> ' + row + ' c ->' + col)
+  return true;
+}
+
+const isAllyRook = (yourPiece, newPiece) => {
+  if (yourPiece === whiteKing) {
+    if (newPiece === blackRook)
+      return false;
+  }
+  else if (yourPiece === blackKing) {
+    if (newPiece === whiteRook)
+      return false;
+  }
+
   return true;
 }
 
@@ -296,12 +380,10 @@ const isRookOrQueenAttacking = (table, row, col, piece) => {
 }
 
 const isBishopOrQueenAttacking = (table, row, col, piece) => {
-  console.log('row -> ' + row + ' col ->' + col)
   // left top
   let r = row - 1, c = col - 1;
   while (r >= 0 && c >= 0) {
 
-    console.log('left top r -> ' + r + ' c ->' + c)
     if (table[r][c] === '') {
       r--;
       c--;
@@ -317,7 +399,6 @@ const isBishopOrQueenAttacking = (table, row, col, piece) => {
   c = col + 1;
   while (r >= 0 && c <= 7) {
 
-    console.log('right top r -> ' + r + ' c ->' + c)
     if (table[r][c] === '') {
       r--;
       c++;
@@ -332,7 +413,6 @@ const isBishopOrQueenAttacking = (table, row, col, piece) => {
   r = row + 1;
   c = col - 1;
   while (r <= 7 && c >= 0) {
-    console.log('left bottom r -> ' + r + ' c ->' + c)
     if (table[r][c] === '') {
       r++;
       c--;
@@ -347,7 +427,6 @@ const isBishopOrQueenAttacking = (table, row, col, piece) => {
   r = row + 1;
   c = col + 1;
   while (r <= 7 && c <= 7) {
-    console.log('right bottom r -> ' + r + ' c ->' + c)
     if (table[r][c] === '') {
       r++;
       c++;
@@ -385,15 +464,14 @@ const isKightAttacking = (table, row, col, piece) => {
 }
 
 const isPawnAttacking = (table, row, col, piece) => {
-
-  if (piece == blackKing) {
+  if (piece === blackKing) {
     if (row < 7 && col > 0 && isOpponentPawn(piece, table[row + 1][col - 1]))
       return true;
     if (row < 7 && col < 7 && isOpponentPawn(piece, table[row + 1][col + 1]))
       return true;
   }
 
-  if (piece == whiteKing) {
+  if (piece === whiteKing) {
     if (row > 0 && col > 0 && isOpponentPawn(piece, table[row - 1][col - 1]))
       return true;
     if (row > 0 && col < 7 && isOpponentPawn(piece, table[row - 1][col + 1]))

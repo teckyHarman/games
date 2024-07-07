@@ -64,3 +64,27 @@ export const kingBoard =
       ['', '', '', '', '', '', '', ''],
     ];
 
+    
+export const enpassantBoard = [
+  [blackPieces[0], blackPieces[1], blackPieces[2], blackPieces[4], blackPieces[3], blackPieces[2], blackPieces[1], blackPieces[0]],
+  [blackPieces[5], blackPieces[5], blackPieces[5], blackPieces[5], blackPieces[5], blackPieces[5], blackPieces[5], blackPieces[5]],
+  ['', '', '', '', '', '', '', ''],
+  ['', '', '', '', whitePawn, '', '', ''],
+  ['', '', '', blackPawn, '', '', '', ''],
+  ['', '', '', '', '', '', '', ''],
+  [whitePieces[5], whitePieces[5], whitePieces[5], whitePieces[5], '', whitePieces[5], whitePieces[5], whitePieces[5]],
+  [whitePieces[0], whitePieces[1], whitePieces[2], whitePieces[4], whitePieces[3], whitePieces[2], whitePieces[1], whitePieces[0]],
+];
+
+    
+export const castlingBoard = [
+  [blackPieces[0], '', '', '', blackPieces[3], '', '', blackPieces[0]],
+  [blackPieces[5], blackPieces[5], blackPieces[5], blackPieces[5], blackPieces[5], blackPieces[5], blackPieces[5], blackPieces[5]],
+  ['', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', ''],
+  ['', '', '', '', whitePawn, '', '', ''],
+  ['', '', '', '', '', '', '', ''],
+  [whitePieces[5], whitePieces[5], whitePieces[5], whitePieces[5], '', whitePieces[5], whitePieces[5], whitePieces[5]],
+  [whitePieces[0], '', '', '', whitePieces[3], '', '', whitePieces[0]],
+];
+
