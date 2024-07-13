@@ -10,7 +10,6 @@ function Tile(props) {
         <div className='pices'>
           {props.piece !== '' && (<img src={getChessPiece(props.piece)} alt="" />)}
           {props.showSpot && <div className='mask'>
-            o
           </div>}
         </div>
       </button>
