@@ -57,9 +57,9 @@ function Chess() {
       // Wrong value for kingsboard
       if (selected_piece === whiteKing || selected_piece === blackKing) {
         if(selected_piece === whiteKing)
-          setWhiteKingsPosition(row, col)
+          setWhiteKingsPosition([row, col])
         if(selected_piece === blackKing)
-          setBlackKingsPosition(row, col)
+          setBlackKingsPosition([row, col])
 
         if (Math.abs(col - selectedPiecePosition[1]) === 2) {
           if (col > selectedPiecePosition[1]) {
