@@ -56,14 +56,13 @@
     background-color: rgb(58, 123, 99);
   }
   .mask{
-    height: 50px;
-    width: 50px;
+    height: 60px;
+    width: 60px;
     position: absolute;
     top: 0px;
     left: 0px;
     font-size: 20px;
-    /* padding: 0px; */
-    padding-top: 10px;
+    background-image: radial-gradient(circle,  white, skyblue);
   }
   .pices
   {
