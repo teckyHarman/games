@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './Chess.css';
 import Promotion from './components/Promotion/Promotion';
 import Grid from './components/Grid/Grid';
@@ -8,12 +8,15 @@ import {
   spot
 } from './helpers/constants.js'
 import {
-  startBoard, pawnTestBoard, emptyBoard, kingBoard, enpassantBoard, castlingBoard
+  emptyBoard, startBoard,
+  // startBoard, pawnTestBoard, emptyBoard, kingBoard, enpassantBoard, castlingBoard
 } from './helpers/testboard.js'
 import { showPossibleMoves, hidePossibleMoves, getMove, isWhitePiece, isBlackPiece } from './helpers/functionHelper.js';
 
 function Chess() {
-  const turn = true;
+  const [whiteTurn, setWhiteTurn] = useState(true);
+  const [whiteKingsPosition, setWhiteKingsPosition] = useState([7,4]);
+  const [blackKingsPosition, setBlackKingsPosition] = useState([0,4]);
   const [selectedPiecePosition, setSelectedPiecePosition] = useState([]);
   const [isWhitePromotionVisible, setIsWhitePromotionVisible] = useState(false);
   const [isBlackPromotionVisible, setIsBlackPromotionVisible] = useState(false);
@@ -51,7 +54,13 @@ function Chess() {
       }
 
       // Castling
+      // Wrong value for kingsboard
       if (selected_piece === whiteKing || selected_piece === blackKing) {
+        if(selected_piece === whiteKing)
+          setWhiteKingsPosition(row, col)
+        if(selected_piece === blackKing)
+          setBlackKingsPosition(row, col)
+
         if (Math.abs(col - selectedPiecePosition[1]) === 2) {
           if (col > selectedPiecePosition[1]) {
             const rook = board[row][7]
@@ -69,14 +78,21 @@ function Chess() {
       setMoves([...moves, move])
       board[row][col] = selected_piece;
       setTable([...board]);
+      setWhiteTurn(!whiteTurn)
+
+      // is check happening
+
     }
     else {
       hidePossibleMoves(possibleMoves, setPossibleMoves);
       if (piece === '')
         return;
-      const board = showPossibleMoves(table, row, col, piece, enPassantRows);
-      setPossibleMoves([...board]);
-      setSelectedPiecePosition([row, col]);
+      if ((whiteTurn === true && isWhitePiece(piece)) || (whiteTurn === false && isBlackPiece(piece))) {
+        const board = showPossibleMoves(table, row, col, piece, enPassantRows,whiteKingsPosition, blackKingsPosition);
+        setPossibleMoves([...board]);
+        setSelectedPiecePosition([row, col]);
+      }
+
     }
   }
 

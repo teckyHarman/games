@@ -105,7 +105,18 @@ export const getChessPiece = (piece) => {
   return null;
 }
 
-export const showPossibleMoves = (table, row, col, piece, enPassantCol) => {
+const setBoard = (table, board, row, col, piece, currentPosition, whiteKingsPosition, blackKingsPosition) => {
+  let table2 = table.map(innerArray => [...innerArray]);
+  table2[currentPosition[0]][currentPosition[1]] = ''
+  table2[row][col] = piece
+  if (isWhitePiece(piece) && !isSafePosition(table2, whiteKingsPosition[0], whiteKingsPosition[1], whiteKing))
+    return;
+  else if (isBlackPiece(piece) && !isSafePosition(table2, blackKingsPosition[0], blackKingsPosition[1], blackKing))
+    return;
+  board[row][col] = spot;
+}
+
+export const showPossibleMoves = (table, row, col, piece, enPassantCol, whiteKingsPosition, blackKingsPosition) => {
   let board = emptyBoard;
   switch (piece) {
 
@@ -113,87 +124,98 @@ export const showPossibleMoves = (table, row, col, piece, enPassantCol) => {
     case whitePawn:
       // go straight
       if (table[row - 1][col] === '') {
-        board[row - 1][col] = spot
+        // board[row - 1][col] = spot
+        setBoard(table, board, row - 1, col, piece, [row, col], whiteKingsPosition, blackKingsPosition)
         // can go 2 step from start
         if (row === 6 && table[row - 2][col] === '')
-          board[row - 2][col] = spot
+          // board[row - 2][col] = spot
+          setBoard(table, board, row - 2, col, piece, [row, col], whiteKingsPosition, blackKingsPosition)
       }
       // left attack
       if (isBlackPiece(table[row - 1][col - 1]))
-        board[row - 1][col - 1] = spot;
+        // board[row - 1][col - 1] = spot;
+        setBoard(table, board, row - 1, col - 1, piece, [row, col], whiteKingsPosition, blackKingsPosition)
       // right attack
       if (isBlackPiece(table[row - 1][col + 1]))
-        board[row - 1][col + 1] = spot;
+        // board[row - 1][col + 1] = spot;
+        setBoard(table, board, row - 1, col + 1, piece, [row, col], whiteKingsPosition, blackKingsPosition)
       // En passant
       if (row === 3 && (col === enPassantCol - 1 || col === enPassantCol + 1))
-        board[row - 1][enPassantCol] = spot;
+        // board[row - 1][enPassantCol] = spot;
+        setBoard(table, board, row - 1, enPassantCol, piece, [row, col], whiteKingsPosition, blackKingsPosition)
 
       return board;
 
     // black pawn
     case blackPawn:
       if (table[row + 1][col] === '') {
-        board[row + 1][col] = spot
+        // board[row + 1][col] = spot
+        setBoard(table, board, row + 1, col, piece, [row, col], whiteKingsPosition, blackKingsPosition)
         if (row === 1 && table[row + 2][col] === '')
-          board[row + 2][col] = spot
+          // board[row + 2][col] = spot
+          setBoard(table, board, row + 2, col, piece, [row, col], whiteKingsPosition, blackKingsPosition)
       }
       if (isWhitePiece(table[row + 1][col - 1]))
-        board[row + 1][col - 1] = spot;
+        // board[row + 1][col - 1] = spot;
+        setBoard(table, board, row + 1, col - 1, piece, [row, col], whiteKingsPosition, blackKingsPosition)
       if (isWhitePiece(table[row + 1][col + 1]))
-        board[row + 1][col + 1] = spot;
+        // board[row + 1][col + 1] = spot;
+        setBoard(table, board, row + 1, col + 1, piece, [row, col], whiteKingsPosition, blackKingsPosition)
       // En passant
       if (row === 4 && (col === enPassantCol - 1 || col === enPassantCol + 1))
-        board[row + 1][enPassantCol] = spot;
+        // board[row + 1][enPassantCol] = spot;
+        setBoard(table, board, row + 1, enPassantCol, piece, [row, col], whiteKingsPosition, blackKingsPosition)
 
       return board;
 
     // rook
     case whiteRook:
     case blackRook:
-      board = rookMoves(table, row, col, piece);
+      board = rookMoves(table, row, col, piece, whiteKingsPosition, blackKingsPosition);
       return board;
 
     // knight
     case whiteKnight:
     case blackKnight:
       if (row > 1 && col > 0 && isValidTile(piece, table[row - 2][col - 1]))
-        board[row - 2][col - 1] = spot
+        // board[row - 2][col - 1] = spot
+        setBoard(table, board, row - 2, col - 1, piece, [row, col], whiteKingsPosition, blackKingsPosition)
       if (row > 1 && col < 7 && isValidTile(piece, table[row - 2][col + 1]))
-        board[row - 2][col + 1] = spot
+         setBoard(table, board,row - 2,col + 1, piece, [row, col], whiteKingsPosition, blackKingsPosition)
 
       if (row < 6 && col > 0 && isValidTile(piece, table[row + 2][col - 1]))
-        board[row + 2][col - 1] = spot
+         setBoard(table, board,row + 2,col - 1, piece, [row, col], whiteKingsPosition, blackKingsPosition)
       if (row < 6 && col < 7 && isValidTile(piece, table[row + 2][col + 1]))
-        board[row + 2][col + 1] = spot
+         setBoard(table, board,row + 2,col + 1, piece, [row, col], whiteKingsPosition, blackKingsPosition)
 
       if (row > 0 && col > 1 && isValidTile(piece, table[row - 1][col - 2]))
-        board[row - 1][col - 2] = spot
+         setBoard(table, board,row - 1,col - 2, piece, [row, col], whiteKingsPosition, blackKingsPosition)
       if (row < 7 && col > 1 && isValidTile(piece, table[row + 1][col - 2]))
-        board[row + 1][col - 2] = spot
+         setBoard(table, board,row + 1,col - 2, piece, [row, col], whiteKingsPosition, blackKingsPosition)
 
       if (row > 0 && col < 6 && isValidTile(piece, table[row - 1][col + 2]))
-        board[row - 1][col + 2] = spot
+         setBoard(table, board,row - 1,col + 2, piece, [row, col], whiteKingsPosition, blackKingsPosition)
       if (row < 7 && col < 6 && isValidTile(piece, table[row + 1][col + 2]))
-        board[row + 1][col + 2] = spot
+         setBoard(table, board,row + 1,col + 2, piece, [row, col], whiteKingsPosition, blackKingsPosition)
       return board;
 
     // bishop
     case whiteBishop:
     case blackBishop:
-      board = bishopMoves(table, row, col, piece);
+      board = bishopMoves(table, row, col, piece, whiteKingsPosition, blackKingsPosition);
       return board;
 
     // king
     case whiteKing:
     case blackKing:
-      board = kingMoves(table, row, col, piece);
+      board = kingMoves(table, row, col, piece, whiteKingsPosition, blackKingsPosition);
       return board;
 
     // queen
     case whiteQueen:
     case blackQueen:
-      board = rookMoves(table, row, col, piece);
-      board = bishopMoves(table, row, col, piece);
+      board = rookMoves(table, row, col, piece, whiteKingsPosition, blackKingsPosition);
+      board = bishopMoves(table, row, col, piece, whiteKingsPosition, blackKingsPosition);
       return board;
 
     case '':
@@ -497,14 +519,16 @@ const isKingAttacking = (table, row, col, piece) => {
   return false;
 }
 
-const rookMoves = (table, row, col, piece) => {
+const rookMoves = (table, row, col, piece, whiteKingsPosition, blackKingsPosition) => {
   let board = emptyBoard;
   // up
   for (let i = row + 1; i < table.length; i++) {
     if (table[i][col] === '')
-      board[i][col] = spot;
+      // board[i][col] = spot;
+      setBoard(table, board, i, col, piece, [row, col], whiteKingsPosition, blackKingsPosition)
     else if (isOpponentPiece(piece, table[i][col])) {
-      board[i][col] = spot;
+      // board[i][col] = spot;
+      setBoard(table, board, i, col, piece, [row, col], whiteKingsPosition, blackKingsPosition)
       break;
     }
     else break;
@@ -513,9 +537,11 @@ const rookMoves = (table, row, col, piece) => {
   // down
   for (let i = row - 1; i >= 0; i--) {
     if (table[i][col] === '')
-      board[i][col] = spot;
+      // board[i][col] = spot;
+      setBoard(table, board, i, col, piece, [row, col], whiteKingsPosition, blackKingsPosition)
     else if (isOpponentPiece(piece, table[i][col])) {
-      board[i][col] = spot;
+      // board[i][col] = spot;
+      setBoard(table, board, i, col, piece, [row, col], whiteKingsPosition, blackKingsPosition)
       break;
     }
     else break;
@@ -524,9 +550,11 @@ const rookMoves = (table, row, col, piece) => {
   // right
   for (let i = col + 1; i < table.length; i++) {
     if (table[row][i] === '')
-      board[row][i] = spot;
+      // board[row][i] = spot;
+      setBoard(table, board, row, i, piece, [row, col], whiteKingsPosition, blackKingsPosition)
     else if (isOpponentPiece(piece, table[row][i])) {
-      board[row][i] = spot;
+      // board[row][i] = spot;
+      setBoard(table, board, row, i, piece, [row, col], whiteKingsPosition, blackKingsPosition)
       break;
     }
     else break;
@@ -535,9 +563,11 @@ const rookMoves = (table, row, col, piece) => {
   // left
   for (let i = col - 1; i >= 0; i--) {
     if (table[row][i] === '')
-      board[row][i] = spot;
+      // board[row][i] = spot;
+      setBoard(table, board, row, i, piece, [row, col], whiteKingsPosition, blackKingsPosition)
     else if (isOpponentPiece(piece, table[row][i])) {
-      board[row][i] = spot;
+      // board[row][i] = spot;
+      setBoard(table, board, row, i, piece, [row, col], whiteKingsPosition, blackKingsPosition)
       break;
     }
     else break;
@@ -545,16 +575,18 @@ const rookMoves = (table, row, col, piece) => {
   return board;
 }
 
-const bishopMoves = (table, row, col, piece) => {
+const bishopMoves = (table, row, col, piece, whiteKingsPosition, blackKingsPosition) => {
   let board = emptyBoard;
 
   // left top
   let r = row - 1, c = col - 1;
   while (r >= 0 && c >= 0) {
     if (table[r][c] === '')
-      board[r][c] = spot;
+      // board[r][c] = spot;
+      setBoard(table, board, r, c, piece, [row, col], whiteKingsPosition, blackKingsPosition)
     else if (isOpponentPiece(piece, table[r][c])) {
-      board[r][c] = spot;
+      // board[r][c] = spot;
+      setBoard(table, board, r, c, piece, [row, col], whiteKingsPosition, blackKingsPosition)
       break;
     }
     else
@@ -568,9 +600,11 @@ const bishopMoves = (table, row, col, piece) => {
   c = col + 1;
   while (r >= 0 && c <= 7) {
     if (table[r][c] === '')
-      board[r][c] = spot;
+      // board[r][c] = spot;
+      setBoard(table, board, r, c, piece, [row, col], whiteKingsPosition, blackKingsPosition)
     else if (isOpponentPiece(piece, table[r][c])) {
-      board[r][c] = spot;
+      // board[r][c] = spot;
+      setBoard(table, board, r, c, piece, [row, col], whiteKingsPosition, blackKingsPosition)
       break;
     }
     else
@@ -584,9 +618,11 @@ const bishopMoves = (table, row, col, piece) => {
   c = col - 1;
   while (r <= 7 && c >= 0) {
     if (table[r][c] === '')
-      board[r][c] = spot;
+      // board[r][c] = spot;
+      setBoard(table, board, r, c, piece, [row, col], whiteKingsPosition, blackKingsPosition)
     else if (isOpponentPiece(piece, table[r][c])) {
-      board[r][c] = spot;
+      // board[r][c] = spot;
+      setBoard(table, board, r, c, piece, [row, col], whiteKingsPosition, blackKingsPosition)
       break;
     }
     else
@@ -600,9 +636,11 @@ const bishopMoves = (table, row, col, piece) => {
   c = col + 1;
   while (r <= 7 && c <= 7) {
     if (table[r][c] === '')
-      board[r][c] = spot;
+      // board[r][c] = spot;
+      setBoard(table, board, r, c, piece, [row, col], whiteKingsPosition, blackKingsPosition)
     else if (isOpponentPiece(piece, table[r][c])) {
-      board[r][c] = spot;
+      // board[r][c] = spot;
+      setBoard(table, board, r, c, piece, [row, col], whiteKingsPosition, blackKingsPosition)
       break;
     }
     else
