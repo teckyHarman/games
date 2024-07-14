@@ -3,8 +3,8 @@
 }
 .container{
     background-color: gray;
-    width: 50%;
+    /* width: 50%; */
     margin: 20px;
-    padding: 30px;
+    padding: 20px;
     border-radius: 20px;
 }

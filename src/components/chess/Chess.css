@@ -47,8 +47,8 @@
   }
   
   .tile, .tile-black {
-    height: 60px;
-    width: 60px;
+    height: 50px;
+    width: 50px;
     position: relative;
     font-size: 20px;
   }
@@ -56,8 +56,8 @@
     background-color: rgb(58, 123, 99);
   }
   .mask{
-    height: 60px;
-    width: 60px;
+    height: 50px;
+    width: 50px;
     position: absolute;
     top: 0px;
     left: 0px;
